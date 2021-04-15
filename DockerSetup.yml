@@ -1,7 +1,7 @@
 hosts: all
 become: yes
 vars:
-  docker_compose_version: "1.27.4"
+  docker_compose_version: "1.29.0"
 tasks:
   - name: Update apt cache
     apt: update_cache=yes cache_valid_time=3600
@@ -57,3 +57,14 @@ tasks:
     command: mv ~/docker-compose /usr/local/bin/docker-compose
     when: docker_compose.stat.exists
     
+  - name: Copy compose file to the server
+    ansible.builtin.copy:
+      src: /home/kvs/Ansible-Docker/docker-compose.yml
+      dst: ~/docker-compose.yml
+      owner: kvs
+      group: kvs
+      mode: '0644'
+
+  - name: Run Docker-Compose
+    docker_compose:
+      project_src: ~/
