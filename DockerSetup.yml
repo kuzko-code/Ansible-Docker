@@ -1,8 +1,10 @@
-hosts: all
-become: yes
-vars:
-  docker_compose_version: "1.29.0"
-tasks:
+---
+- hosts: servers
+  become: yes
+  vars:
+    docker_compose_version: "1.29.0"
+    ansible_user: "root"
+  tasks:
   - name: Update apt cache
     apt: update_cache=yes cache_valid_time=3600
 
@@ -26,6 +28,9 @@ tasks:
     apt_key:
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
+
+  - name: Add Docker Repo
+    command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
   - name: Install Docker
     apt:
@@ -60,7 +65,7 @@ tasks:
   - name: Copy compose file to the server
     ansible.builtin.copy:
       src: /home/kvs/Ansible-Docker/docker-compose.yml
-      dst: ~/docker-compose.yml
+      dest: ~/docker-compose.yml
       owner: kvs
       group: kvs
       mode: '0644'
