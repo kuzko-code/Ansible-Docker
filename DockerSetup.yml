@@ -23,6 +23,7 @@
       - curl
       - software-properties-common
       - gnupg-agent
+      - python3-pip
   
   - name: Add an apt signing key for Docker
     apt_key:
@@ -69,6 +70,9 @@
       owner: kvs
       group: kvs
       mode: '0644'
+
+  - name: Install prerequisites for docker_compose ansible module
+    command: pip3 install docker docker-compose
 
   - name: Run Docker-Compose
     docker_compose:
